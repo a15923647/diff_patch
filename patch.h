@@ -6,9 +6,7 @@
 class Patch {
   public:
     void patch(std::string& x, std::vector<edit_operation>& opv, std::string& res);
-  private:
-    static void insert(std::string& x, size_t& i, std::string& res, edit_operation& op);
-    static void skip(std::string& x, size_t& i, std::string& res, edit_operation& op);
+    void patchBack(std::string& y, std::vector<edit_operation>& opv, std::string& res);
 };
 
 #endif

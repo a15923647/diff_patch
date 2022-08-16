@@ -47,10 +47,23 @@ bool Test::testPatch() {
   ifstream y_fd(y_path);
   string x((istreambuf_iterator<char>(x_fd)), istreambuf_iterator<char>());
   string y((istreambuf_iterator<char>(y_fd)), istreambuf_iterator<char>());
+  std::cout <<  "x length: " << x.length() << ", y length: " << y.length() << std::endl;
   x_fd.close(); y_fd.close();
   string patch_res;
   patch.patch(x, *diff_list, patch_res);
-  return (patch_res == y);
+  if (patch_res != y) {
+    cout << "patch fail!\n";
+    cout << patch_res << endl;
+    cout << y << endl;
+  }
+  string patch_back_res;
+  patch.patchBack(y, *diff_list, patch_back_res);
+  if (patch_back_res != x) {
+    cout << "patchBack fail\n";
+    cout << patch_back_res << endl;
+    cout << x << endl;
+  }
+  return (patch_res == y) && (patch_back_res == x);
 }
 
 int main(int argc, char* argv[]) {

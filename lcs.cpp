@@ -15,12 +15,18 @@ void LCS::lcs(std::string& ret) {
       ret = s[i-1] + ret;
       i--; j--;
     } else if (common_len[i-1][j] < common_len[i][j-1]) {
-      op_list.update(edit_operation{EditOperation::Insert, i-1, std::string(1, t[j-1])});
+      op_list.update(edit_operation{EditOperation::Insert, i, std::string(1, t[j-1])});
       j--;
     } else {
       op_list.update(edit_operation{EditOperation::Delete, i-1, std::string(1, s[i-1])});
       i--;
     }
+  }
+  for (; i > 0; i--) {
+    op_list.update(edit_operation{EditOperation::Delete, i-1, std::string(1, s[i-1])});
+  }
+  for (; j > 0; j--) {
+    op_list.update(edit_operation{EditOperation::Insert, i, std::string(1, t[j-1])});
   }
 }
 std::vector<edit_operation> *LCS::diff_list() {return this->op_list.diff_list();}
