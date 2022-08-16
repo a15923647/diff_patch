@@ -34,7 +34,8 @@ bool Test::testLCS(string x_path, string y_path) {
   string y((istreambuf_iterator<char>(y_fd)), istreambuf_iterator<char>());
   x_fd.close(); y_fd.close();
   lcs = new LCS(x, y);
-  lcs->lcs();
+  string lcs_res;
+  lcs->lcs(lcs_res);
   return true;
 }
 

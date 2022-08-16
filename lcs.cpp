@@ -7,9 +7,8 @@ LCS::LCS(std::string& s, std::string& t) {
   construct_arr();
 }
 size_t LCS::length() {return common_len.back().back();}
-std::string LCS::lcs() {
+void LCS::lcs(std::string& ret) {
   size_t i = common_len.size()-1, j = common_len[0].size()-1;
-  std::string ret;
   op_list.clear();
   while (i > 0 && j > 0) {
     if (s[i-1] == t[j-1]) {
@@ -23,7 +22,6 @@ std::string LCS::lcs() {
       i--;
     }
   }
-  return ret;
 }
 std::vector<edit_operation> *LCS::diff_list() {return this->op_list.diff_list();}
 void LCS::show_arr() {
@@ -35,8 +33,10 @@ void LCS::show_arr() {
   }
 }
 void LCS::construct_arr() {
-  for (size_t i = 1; i < common_len.size(); i++) {
-    for (size_t j = 1; j < common_len[0].size(); j++) {
+  const size_t m = common_len.size();
+  const size_t n = common_len[0].size();
+  for (size_t i = 1; i < m; i++) {
+    for (size_t j = 1; j < n; j++) {
       //                 two end char are identical,+1                    insert s[i] from s[i-1]  insert s[j] from s[j-1]
       common_len[i][j] = (s[i-1] == t[j-1]) ? (common_len[i-1][j-1]+1) : (std::max(common_len[i-1][j], common_len[i][j-1]));
     }

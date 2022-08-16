@@ -8,7 +8,7 @@ class LCS {
   public:
     LCS(std::string& s, std::string& t);
     size_t length();
-    std::string lcs();
+    void lcs(std::string& ret);
     std::vector<edit_operation> *diff_list();
     void show_arr();
   private:
