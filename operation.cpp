@@ -10,7 +10,7 @@ static size_t get_num(std::istream& input_stream) {
   size_t ret = 0;
   while (input_stream.peek() >= '0' && input_stream.peek() <= '9') {
     ret *= 10;
-    ret += input_stream.get();
+    ret += input_stream.get() - '0';
   }
   return ret;
 }
@@ -22,6 +22,7 @@ std::istream& operator >> (std::istream& input_stream, edit_operation& eop) {
   } else if (prefix == operationstringify[EditOperation::Delete][0]) {
     eop.op = EditOperation::Delete;
   } else {
+    std::cerr << "malform input, see " << (int)prefix << std::endl;
     throw "malform input";
   }
   const size_t len = get_num(input_stream);
@@ -31,8 +32,11 @@ std::istream& operator >> (std::istream& input_stream, edit_operation& eop) {
   }
   input_stream.get();//eat " "
   char buf[len+1];
-  input_stream.get(buf, len);
+  for (size_t i = 0; i < len; i++)
+    buf[i] = input_stream.get();
+  buf[len] = '\0';
   eop.content = std::string(buf);
+  input_stream.get();//eat std::endl
   return input_stream;
 }
 
@@ -77,18 +81,19 @@ std::ostream& operator << (std::ostream& output_stream, const OperationList& o_l
 std::istream& operator >> (std::istream& input_stream, OperationList& o_list) {
   std::vector<edit_operation> buf;
   edit_operation tmp;
-  if (!(input_stream.peek() != EOF)) {
+  if (input_stream.peek() != EOF) {
     input_stream >> tmp;
     buf.push_back(tmp);
   }
-  while (!(input_stream.peek() != EOF)) {
+  while (input_stream.peek() != EOF) {
     for (int i = 0; i < 4; i++) input_stream.get();
     input_stream >> tmp;
     buf.push_back(tmp);
   }
   reverse(buf.begin(), buf.end());
-  for (auto& eop : buf)
+  for (auto& eop : buf) {
     o_list.update(eop);
+  }
   return input_stream;
 }
 

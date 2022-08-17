@@ -30,7 +30,9 @@ bool Test::testOperation() {
   ifstream fin("op_list_dump.txt");
   fin >> op_list;
   fin.close();
+  cout << "output file op_list\n";
   cout << op_list;
+  cout << "operation list content length: " << op_list.content_length() << endl;
   return true;
 }
 
@@ -43,14 +45,14 @@ bool Test::testLCS(string x_path, string y_path) {
   string x((istreambuf_iterator<char>(x_fd)), istreambuf_iterator<char>());
   string y((istreambuf_iterator<char>(y_fd)), istreambuf_iterator<char>());
   x_fd.close(); y_fd.close();
-  cout << x << y;
+  //cout << x << y;
   lcs = new LCS(x, y);
   string lcs_res;
   lcs->lcs(lcs_res);
   ofstream f("op_list_dump.txt");
   f << lcs->op_list;
   f.close();
-  cout << lcs->op_list << endl;
+  //cout << lcs->op_list << endl;
   return true;
 }
 
