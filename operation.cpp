@@ -36,8 +36,8 @@ std::istream& operator >> (std::istream& input_stream, edit_operation& eop) {
   return input_stream;
 }
 
-void OperationList::show() {
-  for (auto& eop : ops)
+void OperationList::show() const {
+  for (const auto& eop : ops)
     eop.show();
 }
 
@@ -48,6 +48,7 @@ std::vector<edit_operation> *OperationList::diff_list() {
 }
 
 void OperationList::update(edit_operation new_operation) {
+  this->_content_length += new_operation.length();
   if (!ops.empty() && ops.back().adjacent(new_operation.pos, new_operation.op)) {
     ops.back().content = new_operation.content + ops.back().content;
     ops.back().pos = new_operation.pos;
@@ -56,10 +57,11 @@ void OperationList::update(edit_operation new_operation) {
   }
 }
 
-OperationList::OperationList() {this->ops = std::vector<edit_operation>();}
+OperationList::OperationList() {this->clear();}
 bool OperationList::empty() const {return ops.empty();}
 size_t OperationList::size() const {return this->ops.size();}
-void OperationList::clear() {this->ops.clear();}
+size_t OperationList::content_length() const {return this->_content_length;}
+void OperationList::clear() {this->ops.clear(); this->_content_length = 0;}
 auto OperationList::begin() const {return this->ops.begin();}
 auto OperationList::end() const {return this->ops.end();}
 
