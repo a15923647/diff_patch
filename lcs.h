@@ -11,10 +11,10 @@ class LCS {
     void lcs(std::string& ret);
     std::vector<edit_operation> *diff_list();
     void show_arr();
+    OperationList op_list;
   private:
     void construct_arr();
     std::vector<std::vector<size_t>> common_len;
-    OperationList op_list;
     std::string s;
     std::string t;
 };

@@ -17,15 +17,25 @@ class Test {
 };
 
 bool Test::testOperation() {
-  edit_operation example{EditOperation::Insert, 1, "insert"};
+  cout << "Testing operation\n";
+  edit_operation example{EditOperation::Insert, 1, "insert content"};
   example.show();
+  ofstream f("eop_dump.txt");
+  f << example;
+  f.close();
   if (!example.adjacent(1, EditOperation::Insert)) {
     return false;
   }
+  OperationList op_list;
+  ifstream fin("op_list_dump.txt");
+  fin >> op_list;
+  fin.close();
+  cout << op_list;
   return true;
 }
 
 bool Test::testLCS(string x_path, string y_path) {
+  cout << "testing LCS\n";
   this->x_path = string(x_path);
   this->y_path = string(y_path);
   ifstream x_fd(x_path);
@@ -33,13 +43,19 @@ bool Test::testLCS(string x_path, string y_path) {
   string x((istreambuf_iterator<char>(x_fd)), istreambuf_iterator<char>());
   string y((istreambuf_iterator<char>(y_fd)), istreambuf_iterator<char>());
   x_fd.close(); y_fd.close();
+  cout << x << y;
   lcs = new LCS(x, y);
   string lcs_res;
   lcs->lcs(lcs_res);
+  ofstream f("op_list_dump.txt");
+  f << lcs->op_list;
+  f.close();
+  cout << lcs->op_list << endl;
   return true;
 }
 
 bool Test::testPatch() {
+  cout << "testing Patch\n";
   if (!this->lcs) return false;
   auto *diff_list = lcs->diff_list();
   auto patch = Patch();
@@ -71,9 +87,14 @@ int main(int argc, char* argv[]) {
     cout << "Usage: " << argv[0] << " x_path y_path\n";
     return 1;
   }
+  cout << "x_path: " << argv[1] << endl;
+  cout << "y_path: " << argv[2] << endl;
   Test test;
-  cout << "test operation " << (test.testOperation() ? "SUCCESS" : "FAIL") << endl;
-  cout << "test LCS " << (test.testLCS(argv[1], argv[2]) ? "SUCCESS" : "FAIL") << endl;
-  cout << "test patch " << (test.testPatch() ? "SUCCESS" : "FAIL") << endl;
+  const string op_res = (test.testOperation() ? "SUCCESS" : "FAIL");
+  const string lcs_res = (test.testLCS(argv[1], argv[2]) ? "SUCCESS" : "FAIL");
+  const string patch_res = (test.testPatch() ? "SUCCESS" : "FAIL");
+  cout << "test operation " << op_res << endl;
+  cout << "test LCS " << lcs_res << endl;
+  cout << "test patch " << patch_res << endl;
   return 0;
 }

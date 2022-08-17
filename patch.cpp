@@ -12,7 +12,7 @@ void Patch::patch(std::string& x, std::vector<edit_operation>& opv, std::string&
   size_t idx = 0;
   for (size_t x_idx = 0; idx < opv.size() || x_idx < x.length(); x_idx++) {
     while (x_idx == opv[idx].pos) {
-      opv[idx].show();
+      //opv[idx].show();
       if (opv[idx].op == EditOperation::Insert) {
         //res += opv[idx++].content;
         insert(opv, idx, res);
